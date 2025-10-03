@@ -10,15 +10,15 @@ struct Node {
 
 // Fungsi untuk menukar posisi head dan tail
 void exchangeHeadAndTail(Node *&head_ref) {
-    // Hanya berjalan jika ada 1 node
+    // Jika list kosong atau hanya berisi 1 node → tidak ada yang ditukar
     if (head_ref == nullptr || head_ref->next == head_ref) {
         return;
     }
 
-    Node* head = head_ref; 
-    Node* tail = head_ref->prev; // Tail adalah prev dari head
+    Node* head = head_ref;  // Simpan pointer head
+    Node* tail = head_ref->prev; // Tail adalah prev dari head (karena circular)
 
-    // Buat kondisi jika hanya 2 node, cukup swap head_ref
+    // jika hanya 2 node, cukup swap head_ref
     if (head->next == tail ) {
         head_ref = tail;
         return;
@@ -28,15 +28,19 @@ void exchangeHeadAndTail(Node *&head_ref) {
     Node* headNext = head->next; // node setelah head
     Node* tailPrev = tail->prev; // node sebelum tail
 
-    // update koneksi
-    tail->next = headNext;
-    headNext->prev = tail;
-    head->prev = tailPrev;
-    tailPrev->next = head;
-    tail->prev = head;
-    head->next = tail;
+    // Update koneksi untuk memindahkan tail ke depan
+    tail->next = headNext; // tail sekarang mengarah ke node setelah head
+    headNext->prev = tail; // node setelah head menunjuk balik ke tail
+    
+    // Update koneksi untuk memindahkan head ke belakang
+    head->prev = tailPrev; // head menunjuk ke node sebelum tail
+    tailPrev->next = head; // node sebelum tail menunjuk ke head
+    
+    // Hubungkan head dan tail satu sama lain
+    tail->prev = head; // tail menunjuk balik ke head
+    head->next = tail; // head menunjuk ke tail
 
-    // Update head_ref ke tail 
+    // Update head_ref ke node baru (tail jadi head)
     head_ref = tail;
 }
 

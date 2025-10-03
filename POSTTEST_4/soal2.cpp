@@ -1,8 +1,8 @@
-
 #include <iostream>
 #include <string>
 using namespace std;
 
+// Struktur node untuk stack (linked list)
 struct Node {
     char data;
     Node* next;
@@ -10,23 +10,23 @@ struct Node {
 
 // fungsi push stack
 void push(Node*& top, char data) {
-    Node* newNode = new Node{data, top};
-    top = newNode;
+    Node* newNode = new Node{data, top}; // Buat node baru, next-nya menunjuk ke top lama
+    top = newNode; // Update top agar menunjuk ke node baru
 }
 
 // fungsi pop stack
 char pop(Node*& top) {
-    if (top == nullptr) return '\0';
-    Node* temp = top;
-    char poppedValue = temp->data;
-    top = top->next;
-    delete temp;
-    return poppedValue;
+    if (top == nullptr) return '\0'; // Jika stack kosong, kembalikan karakter null
+    Node* temp = top; // Simpan node teratas
+    char poppedValue = temp->data; // Ambil data dari node teratas
+    top = top->next; // Geser top ke node berikutnya
+    delete temp; // Hapus node lama dari memori
+    return poppedValue; // Kembalikan karakter yang di-pop
 }
 
 // fungsi cek keseimbangan bracket
 bool areBracketsBalanced(string expr) {
-    Node* stackTop = nullptr;
+    Node* stackTop = nullptr; // Stack kosong pada awalnya
 
     // 1. Loop setiap karakter dalam `expr`
     for (char c : expr) {
@@ -45,11 +45,13 @@ bool areBracketsBalanced(string expr) {
             if ((c == ')' && topChar != '(') ||
                 (c == '}' && topChar != '{') ||
                 (c == ']' && topChar != '[')) {
-                return false ;
+                return false ; // Tidak cocok -> tidak seimbang
             }
         }
     }
     // 4. Setelah loop selesai, jika stack kosong, return true. Jika tidak, return false.
+    // Kalau kosong berarti semua kurung seimbang
+    // Kalau masih ada sisa kurung buka -> tidak seimbang
     return stackTop == nullptr;
 }
 
